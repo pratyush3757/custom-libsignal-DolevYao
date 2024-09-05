@@ -312,6 +312,7 @@ impl KeyPair {
         let private_key = PrivateKey::from(PrivateKeyData::DjbPrivateKey(
             private_key.private_key_bytes(),
         ));
+        log::trace!("Generated KeyPair with public_key: {:?}", hex::encode(public_key.serialize()));
 
         Self {
             public_key,
@@ -320,6 +321,7 @@ impl KeyPair {
     }
 
     pub fn new(public_key: PublicKey, private_key: PrivateKey) -> Self {
+        log::trace!("New KeyPair with public_key: {:?}", hex::encode(public_key.serialize()));
         Self {
             public_key,
             private_key,
@@ -329,6 +331,8 @@ impl KeyPair {
     pub fn from_public_and_private(public_key: &[u8], private_key: &[u8]) -> Result<Self> {
         let public_key = PublicKey::try_from(public_key)?;
         let private_key = PrivateKey::try_from(private_key)?;
+
+        log::trace!("Convert to KeyPair with public_key: {:?}", hex::encode(public_key.serialize()));
         Ok(Self {
             public_key,
             private_key,

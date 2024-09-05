@@ -61,9 +61,12 @@ impl traits::IdentityKeyStore for InMemIdentityKeyStore {
         address: &ProtocolAddress,
         identity: &IdentityKey,
     ) -> Result<bool> {
+        // TODO: Add save key trace log
         match self.known_keys.get(address) {
             None => {
                 self.known_keys.insert(address.clone(), *identity);
+                log::trace!("Saving identity.\nAddress: {:?}\nID Key:{:?}", address,
+                    hex::encode(identity.public_key().serialize()));
                 Ok(false) // new key
             }
             Some(k) if k == identity => {
@@ -71,6 +74,8 @@ impl traits::IdentityKeyStore for InMemIdentityKeyStore {
             }
             Some(_k) => {
                 self.known_keys.insert(address.clone(), *identity);
+                log::trace!("Overwriting identity.\nAddress: {:?}\nID Key:{:?}", address,
+                    hex::encode(identity.public_key().serialize()));
                 Ok(true) // overwrite
             }
         }
@@ -135,6 +140,8 @@ impl traits::PreKeyStore for InMemPreKeyStore {
     }
 
     async fn save_pre_key(&mut self, id: PreKeyId, record: &PreKeyRecord) -> Result<()> {
+        // TODO: Maybe add a trace here
+        log::trace!("Saving PreKey. {:?}\n", id);
         // This overwrites old values, which matches Java behavior, but is it correct?
         self.pre_keys.insert(id, record.to_owned());
         Ok(())
@@ -335,6 +342,10 @@ impl traits::SenderKeyStore for InMemSenderKeyStore {
         distribution_id: Uuid,
         record: &SenderKeyRecord,
     ) -> Result<()> {
+        // TODO: Add trace log for adding keys
+        log::trace!("Saving sender key. {:?}\n
+            {:?}\n
+            {:?}\n", sender, distribution_id, record);
         self.keys.insert(
             (Cow::Owned(sender.clone()), distribution_id),
             record.clone(),

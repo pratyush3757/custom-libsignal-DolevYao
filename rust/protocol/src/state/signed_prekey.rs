@@ -74,6 +74,8 @@ pub trait GenericSignedPreKey {
         let public_key = key_pair.get_public().serialize();
         let private_key = key_pair.get_private().serialize();
         let signature = signature.to_vec();
+        log::trace!("Generated SignedPreKey with public key {:?}", hex::encode(&public_key));
+
         Self::from_storage(SignedPreKeyRecordStructure {
             id: id.into(),
             timestamp,

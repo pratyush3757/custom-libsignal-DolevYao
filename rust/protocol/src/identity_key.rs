@@ -107,6 +107,14 @@ impl IdentityKeyPair {
     pub fn generate<R: CryptoRng + Rng>(csprng: &mut R) -> Self {
         let keypair = KeyPair::generate(csprng);
 
+        log::trace!("Generated IdentityKeyPair with identity_key: {:?}\n",
+            hex::encode(keypair.public_key.serialize()));
+        /* log::trace!("Generated IdentityKeyPair with
+            identity_key: {:?}\n
+            private_key: serialize={:?}\n",
+            keypair.public_key,
+            keypair.private_key.serialize()); */
+
         Self {
             identity_key: keypair.public_key.into(),
             private_key: keypair.private_key,

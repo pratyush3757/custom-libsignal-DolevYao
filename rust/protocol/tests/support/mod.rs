@@ -33,6 +33,7 @@ pub async fn encrypt(
     remote_address: &ProtocolAddress,
     msg: &str,
 ) -> Result<CiphertextMessage, SignalProtocolError> {
+    log::trace!("Encrypt message to {}", remote_address);
     message_encrypt(
         msg.as_bytes(),
         remote_address,
