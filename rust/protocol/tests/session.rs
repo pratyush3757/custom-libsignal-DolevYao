@@ -46,6 +46,7 @@ fn test_basic_prekey() -> TestResult {
         F: Fn(&mut TestStoreBuilder),
     {
         async {
+            init_logger();
             let mut csprng = OsRng;
 
             let bob_device_id: DeviceId = 1.into();
