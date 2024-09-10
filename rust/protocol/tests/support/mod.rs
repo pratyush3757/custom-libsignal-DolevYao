@@ -67,7 +67,9 @@ pub async fn create_pre_key_bundle<R: Rng + CryptoRng>(
     store: &mut dyn ProtocolStore,
     mut csprng: &mut R,
 ) -> Result<PreKeyBundle, SignalProtocolError> {
+    log::trace!("pre_key_pair");
     let pre_key_pair = KeyPair::generate(&mut csprng);
+    log::trace!("signed_pre_key_pair");
     let signed_pre_key_pair = KeyPair::generate(&mut csprng);
     let kyber_pre_key_pair = kem::KeyPair::generate(kem::KeyType::Kyber1024);
 
@@ -126,6 +128,7 @@ pub async fn create_pre_key_bundle<R: Rng + CryptoRng>(
         )
         .await?;
 
+    log::trace!("saving kyber_pre_key");
     store
         .save_kyber_pre_key(
             kyber_pre_key_id.into(),
